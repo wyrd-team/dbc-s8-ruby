@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  app:
+    build: .
+    command: tail -f /dev/null
+    volumes:
+      - .:/app_root:delegated
+    ports:
+      - 3000:3000
