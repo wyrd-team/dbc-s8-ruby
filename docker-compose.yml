@@ -3,8 +3,17 @@ version: '3'
 services:
   app:
     build: .
-    command: tail -f /dev/null
+    environment:
+      BIND: 0.0.0.0
     volumes:
       - .:/app_root:delegated
+      - app_bundle:/usr/local/bundle
+      - app_logs:/app_root/log
+      - app_tmp:/app_root/tmp
     ports:
       - 3000:3000
+
+volumes:
+  app_bundle:
+  app_logs:
+  app_tmp:
