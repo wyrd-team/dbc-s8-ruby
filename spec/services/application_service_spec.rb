@@ -14,6 +14,6 @@ RSpec.describe ::ApplicationService, type: :service do
   end
 
   it 'ApplicationService.call' do
-    expect(test_class.call).to eql("Sample")
+    expect(test_class.call).to eql('Sample')
   end
 end
