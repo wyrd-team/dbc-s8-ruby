@@ -10,7 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_25_041623) do
+ActiveRecord::Schema.define(version: 2021_08_30_035531) do
+
+  create_table "tasks", force: :cascade do |t|
+    t.date "expired_on"
+    t.integer "priority"
+    t.integer "status"
+    t.integer "user_id", null: false
+    t.string "name"
+    t.string "description"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_tasks_on_user_id"
+  end
 
   create_table "users", force: :cascade do |t|
     t.integer "role"
@@ -18,4 +30,5 @@ ActiveRecord::Schema.define(version: 2021_08_25_041623) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  add_foreign_key "tasks", "users"
 end
