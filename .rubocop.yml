@@ -11,4 +11,15 @@
 require: rubocop-rspec
 
 AllCops:
+  TargetRubyVersion: 2.7.4
   NewCops: enable
+  Exclude:
+    - bin/*
+    - vendor/bundle/**/*
+    - db/**/*
+
+Style/Documentation:
+  Enabled: false
+
+Style/AsciiComments:
+  Enabled: false
