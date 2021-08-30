@@ -11,6 +11,7 @@
 require: rubocop-rspec
 
 AllCops:
+  TargetRubyVersion: 2.7.4
   NewCops: enable
   Exclude:
     - bin/*
