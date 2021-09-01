@@ -2,6 +2,12 @@
 
 FactoryBot.define do
   factory :user do
-    role { 0 } # TODO: enum設定後に要変更
+    trait :general do
+      role { :general }
+    end
+
+    trait :admin do
+      role { :admin }
+    end
   end
 end
