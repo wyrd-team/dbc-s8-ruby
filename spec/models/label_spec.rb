@@ -3,5 +3,9 @@
 require 'rails_helper'
 
 RSpec.describe Label, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  let(:label) { create(:label) }
+
+  it 'ラベルが作成できること' do
+    expect(label.name).to eq('タスク')
+  end
 end
