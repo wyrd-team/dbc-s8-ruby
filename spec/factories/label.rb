@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :label do
-    association :user
+    association :user, :general
     name { 'タスク' }
   end
 end

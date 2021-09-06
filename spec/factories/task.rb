@@ -2,10 +2,10 @@
 
 FactoryBot.define do
   factory :task do
-    association :user
+    association :user, :general
     expired_on { Date.current }
-    priority { 0 } # TODO: enum設定後に要変更
-    status { 0 } # TODO: enum設定後に要変更
+    priority { :middle }
+    status { :not_started_yet }
     name { 'タスク名' }
     description { 'タスク説明' }
   end
