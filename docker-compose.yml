@@ -4,7 +4,7 @@ services:
   app:
     build: .
     environment:
-      BIND: 0.0.0.0
+      BINDING: 0.0.0.0
     volumes:
       - .:/app_root:delegated
       - app_bundle:/usr/local/bundle
