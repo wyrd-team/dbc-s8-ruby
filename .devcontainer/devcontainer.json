@@ -1,0 +1,17 @@
+{
+  "name": "dbc-s8-ruby",
+  "dockerComposeFile": "../docker-compose.yml",
+  "overrideCommand": true,
+  "service": "app",
+  "workspaceFolder": "/app_root",
+  "settings": {
+    "ruby.useBundler": true,
+    "ruby.useLanguageServer": true,
+    "ruby.rubocop.suppressRubocopWarnings": true
+},
+  "extensions": [
+    "rebornix.ruby",
+    "misogi.ruby-rubocop",
+    "ms-vsliveshare.vsliveshare"
+  ]
+}
