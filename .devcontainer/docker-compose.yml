@@ -2,18 +2,17 @@ version: '3'
 
 services:
   app:
-    build: .
+    build:
+      context: ../
+      dockerfile: ./.devcontainer/Dockerfile
     environment:
       BINDING: 0.0.0.0
     volumes:
-      - .:/app_root:delegated
+      - app_volume:/app_root
       - app_bundle:/usr/local/bundle
-      - app_logs:/app_root/log
-      - app_tmp:/app_root/tmp
     ports:
       - 3000:3000
 
 volumes:
+  app_volume:
   app_bundle:
-  app_logs:
-  app_tmp:
