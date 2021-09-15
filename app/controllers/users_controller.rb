@@ -2,7 +2,7 @@
 
 class UsersController < ApplicationController
   def create
-    user = ::User.create!(user_params)
+    user = ::Users::CreateUserDomain.call(user_params)
     render json: { user: user }, status: :ok
   end
 
