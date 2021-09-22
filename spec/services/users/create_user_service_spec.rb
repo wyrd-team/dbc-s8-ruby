@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe ::Users::CreateUserDomain, type: :domain do
+RSpec.describe ::Users::CreateUserService, type: :service do
   subject(:result) do
     described_class.call(role: 'general')
   end

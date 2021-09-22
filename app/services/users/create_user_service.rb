@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Users
-  class CreateUserDomain < Domain
+  class CreateUserService < ApplicationService
     attribute :role, :string
 
     def call

@@ -2,8 +2,7 @@
 
 class UsersController < ApplicationController
   def create
-    # TODO: DomainじゃなくてServiceだった
-    user = ::Users::CreateUserDomain.call(user_params)
+    user = ::Users::CreateUserService.call(user_params)
     render json: { user: user }, status: :ok
   end
 
