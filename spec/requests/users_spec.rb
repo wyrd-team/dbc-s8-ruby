@@ -35,10 +35,12 @@ RSpec.describe '/users', type: :request do
   end
 
   describe 'GET /index' do
-    it 'renders a successful response' do
-      User.create! valid_attributes
-      get users_url, headers: valid_headers, as: :json
-      expect(response).to be_successful
+    it 'contains multiple users' do
+      user1 = create(:user)
+      user2 = create(:user)
+
+      get users_url
+      expect(response.parsed_body).to contain_exactly(user1.as_json, user2.as_json)
     end
   end
 
