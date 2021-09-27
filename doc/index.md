@@ -11,3 +11,12 @@
   - モデルのコールバックを利用してみましょう
 - ※ Gemの使用・不使用は自由です
 
+| Method | Path | Desc | Admin | general |
+| --- | --- | --- |:---:|:---:|
+| GET    | /users/ | ユーザ一覧 | ✓ ||
+| POST   | /users/ | 新規ユーザ作成 | ✓ ||
+| GET    | /users/{USER_ID} | ユーザ情報取得 | ✓ |✓|
+| POST,PATCH,PUT   | /users/{USER_ID} | 更新 | ✓ |✓|
+| DELETE | /users/{USER_ID} | 削除 | ✓ |✓|
+
+general は自分のリソースのみに限る.
