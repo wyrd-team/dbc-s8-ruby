@@ -44,6 +44,17 @@ class UsersController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def user_params
+    # { user: { role: admin }, current_user_id: 1234  }
     params.require(:user).permit(:role)
+  end
+
+  def auth_params
+    # 認証する方法がないためパラメータでカレントユーザのIDを受け取る様にする
+    params.permit(:current_user_id)
+  end
+
+  def admin?
+    # TODO: この辺のテストを書いて動作を確認する
+    User.find(auth_params[:current_user_id]).admin?
   end
 end

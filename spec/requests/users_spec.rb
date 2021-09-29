@@ -19,7 +19,7 @@ RSpec.describe '/users', type: :request do
   # User. As you add validations to User, be sure to
   # adjust the attributes here as well.
   let(:valid_attributes) do
-    skip('Add a hash of attributes valid for your model')
+    { role: :admin }
   end
 
   let(:invalid_attributes) do
