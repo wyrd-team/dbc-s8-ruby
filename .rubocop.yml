@@ -27,3 +27,6 @@ Style/AsciiComments:
 Metrics/BlockLength:
   Exclude:
     - spec/**/*
+
+RSpec/ExampleLength:
+  CountAsOne: ['array', 'hash', 'heredoc']

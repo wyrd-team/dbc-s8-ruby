@@ -54,12 +54,14 @@ RSpec.describe '/users', type: :request do
 
   describe 'POST /create' do
     it 'has status 200' do
-      post users_path, params: { user: { role: 'general' } }
+      operator = create(:user, role: :admin)
+      post users_path, params: { user: { role: 'general' }, current_user_id: operator.id }
       expect(response).to have_http_status(:ok)
     end
 
     it 'contains created user' do
-      post users_path, params: { user: { role: 'general' } }
+      operator = create(:user, role: :admin)
+      post users_path, params: { user: { role: 'general' }, current_user_id: operator.id }
       expect(response.parsed_body.deep_symbolize_keys[:user]).to include(
         id: kind_of(Integer),
         role: 'general'
@@ -67,9 +69,16 @@ RSpec.describe '/users', type: :request do
     end
 
     it 'creates user' do
+      operator = create(:user, role: :admin)
       expect do
-        post users_path, params: { user: { role: 'general' } }
+        post users_path, params: { user: { role: 'general' }, current_user_id: operator.id }
       end.to change(User, :count).by(1)
+    end
+
+    it 'requires admin role to operate' do
+      operator = create(:user, role: :general)
+      post users_path, params: { user: { role: 'general' }, current_user_id: operator.id }
+      expect(response).to have_http_status(:forbidden)
     end
   end
 

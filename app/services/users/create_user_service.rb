@@ -2,14 +2,21 @@
 
 module Users
   class CreateUserService < ApplicationService
+    # 作成するロール文字列
     attribute :role, :string
+    # 操作するユーザID
+    attribute :operated_by, :integer
 
     def call
-      user = ::User.create!(role: role)
-      user_vo = ::Users::UserVo.new
-      user_vo.id = user.id
-      user_vo.role = user.role
-      user_vo
+      raise ::Services::AuthError, '権限なし' if operator.admin?
+
+      ::UserRepository.create(role: role)
+    end
+
+    private
+
+    def operator
+      ::UserRepository.find_by_id(user_id: operated_by)
     end
   end
 end

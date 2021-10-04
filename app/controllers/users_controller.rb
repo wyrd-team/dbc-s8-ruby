@@ -17,7 +17,7 @@ class UsersController < ApplicationController
 
   # POST /users
   def create
-    user = ::Users::CreateUserService.call(user_params)
+    user = ::Users::CreateUserService.call(**user_params, operated_by: auth_params[:current_user_id])
     render json: { user: user }, status: :ok
   end
 
