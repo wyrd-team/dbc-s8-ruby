@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class UsersController < ApplicationController
+  rescue_from ::Services::AuthError do |exception|
+    render json: exception, status: 403
+  end
   before_action :set_user, only: %i[show update destroy]
 
   # GET /users
@@ -51,10 +54,5 @@ class UsersController < ApplicationController
   def auth_params
     # 認証する方法がないためパラメータでカレントユーザのIDを受け取る様にする
     params.permit(:current_user_id)
-  end
-
-  def admin?
-    # TODO: この辺のテストを書いて動作を確認する
-    User.find(auth_params[:current_user_id]).admin?
   end
 end

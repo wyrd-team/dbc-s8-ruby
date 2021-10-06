@@ -8,15 +8,15 @@ module Users
     attribute :operated_by, :integer
 
     def call
-      raise ::Services::AuthError, '権限なし' if operator.admin?
+      raise ::Services::AuthError, '権限なし' unless operator.admin?
 
-      ::UserRepository.create(role: role)
+      ::Users::UserRepository.new.create(role: role)
     end
 
     private
 
     def operator
-      ::UserRepository.find_by_id(user_id: operated_by)
+      ::Users::UserRepository.new.find_by_id(user_id: operated_by)
     end
   end
 end

@@ -2,7 +2,7 @@
 
 module Users
   class UserRepository < ApplicationRepository
-    def craete(role:)
+    def create(role:)
       user = ::User.create!(role: role)
       user_vo = ::Users::UserVo.new
       user_vo.id = user.id
@@ -12,6 +12,7 @@ module Users
 
     def find_by_id(user_id:)
       user = ::User.find(user_id)
+      return unless user
       user_vo = ::Users::UserVo.new
       user_vo.id = user.id
       user_vo.role = user.role
