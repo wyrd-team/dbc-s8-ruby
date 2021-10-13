@@ -4,7 +4,6 @@ class UsersController < ApplicationController
   rescue_from ::Services::AuthError do |exception|
     render json: exception, status: 403
   end
-  before_action :set_user, only: %i[show update destroy]
 
   # GET /users
   def index
@@ -26,29 +25,22 @@ class UsersController < ApplicationController
 
   # PATCH/PUT /users/1
   def update
-    if @user.update(user_params)
-      render json: @user
-    else
-      render json: @user.errors, status: :unprocessable_entity
-    end
+    user = ::Users::UpdateUserService.call(**user_params, operated_by: auth_params[:current_user_id])
+    render json: user
+    # render json: @user.errors, status: :unprocessable_entity
   end
 
   # DELETE /users/1
   def destroy
-    @user.destroy
+    raise NotImplementedError
   end
 
   private
 
-  # Use callbacks to share common setup or constraints between actions.
-  def set_user
-    @user = User.find(params[:id])
-  end
-
   # Only allow a list of trusted parameters through.
   def user_params
-    # { user: { role: admin }, current_user_id: 1234  }
-    params.require(:user).permit(:role)
+    # { user: { id: 1234, role: admin }, current_user_id: 1234  }
+    params.require(:user).permit(:id, :role)
   end
 
   def auth_params

@@ -83,36 +83,40 @@ RSpec.describe '/users', type: :request do
   end
 
   describe 'PATCH /update' do
-    context 'with valid parameters' do
-      let(:new_attributes) do
-        skip('Add a hash of attributes valid for your model')
-      end
-
-      it 'updates the requested user' do
-        user = User.create! valid_attributes
-        patch user_url(user),
-              params: { user: new_attributes }, headers: valid_headers, as: :json
-        user.reload
-        skip('Add assertions for updated state')
-      end
-
-      it 'renders a JSON response with the user' do
-        user = User.create! valid_attributes
-        patch user_url(user),
-              params: { user: new_attributes }, headers: valid_headers, as: :json
-        expect(response).to have_http_status(:ok)
-        expect(response.content_type).to match(a_string_including('application/json'))
-      end
+    it 'has status 200' do
+      target_user = create(:user, role: :general)
+      operator = create(:user, role: :admin)
+      patch user_path(target_user.id), params:
+        { user: { user_id: target_user.id, role: 'admin' }, current_user_id: operator.id }
+      expect(response).to have_http_status(:ok)
     end
 
-    context 'with invalid parameters' do
-      it 'renders a JSON response with errors for the user' do
-        user = User.create! valid_attributes
-        patch user_url(user),
-              params: { user: invalid_attributes }, headers: valid_headers, as: :json
-        expect(response).to have_http_status(:unprocessable_entity)
-        expect(response.content_type).to eq('application/json')
-      end
+    it 'contains updated user' do
+      target_user = create(:user, role: :general)
+      operator = create(:user, role: :admin)
+      patch user_path(target_user.id), params:
+        { user: { user_id: target_user.id, role: 'admin' }, current_user_id: operator.id }
+      expect(response.parsed_body.deep_symbolize_keys[:user]).to include(
+        id: target_user.id,
+        role: 'admin'
+      )
+    end
+
+    it 'updates user' do
+      target_user = create(:user, role: :general)
+      operator = create(:user, role: :admin)
+      expect do
+        patch user_path(target_user.id), params:
+          { user: { user_id: target_user.id, role: 'admin' }, current_user_id: operator.id }
+      end.to change(target_user, :general).to('admin')
+    end
+
+    it 'requires admin role to operate' do
+      target_user = create(:user, role: :general)
+      operator = create(:user, role: :general)
+      patch user_path(target_user.id), params:
+        { user: { user_id: target_user.id, role: 'admin' }, current_user_id: operator.id }
+      expect(response).to have_http_status(:forbidden)
     end
   end
 
