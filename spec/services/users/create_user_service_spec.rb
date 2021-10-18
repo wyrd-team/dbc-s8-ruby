@@ -6,6 +6,7 @@ RSpec.describe ::Users::CreateUserService, type: :service do
   subject(:result) do
     described_class.call(operated_by: admin.id, role: 'general')
   end
+
   let(:admin) do
     create(:user, role: :admin)
   end

@@ -16,7 +16,7 @@ module Users
       raise ::Services::AuthError, '権限なし' unless allowed
 
       # 更新周りはこんな感じ
-      ::Users::UserRepository.new.update(user, role: role)
+      ::Users::UserRepository.new.update(user_id: user.id, role: role)
     end
 
     private

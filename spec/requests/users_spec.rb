@@ -87,7 +87,7 @@ RSpec.describe '/users', type: :request do
       target_user = create(:user, role: :general)
       operator = create(:user, role: :admin)
       patch user_path(target_user.id), params:
-        { user: { user_id: target_user.id, role: 'admin' }, current_user_id: operator.id }
+        { user: { id: target_user.id, role: 'admin' }, current_user_id: operator.id }
       expect(response).to have_http_status(:ok)
     end
 
@@ -95,7 +95,7 @@ RSpec.describe '/users', type: :request do
       target_user = create(:user, role: :general)
       operator = create(:user, role: :admin)
       patch user_path(target_user.id), params:
-        { user: { user_id: target_user.id, role: 'admin' }, current_user_id: operator.id }
+        { user: { id: target_user.id, role: 'admin' }, current_user_id: operator.id }
       expect(response.parsed_body.deep_symbolize_keys[:user]).to include(
         id: target_user.id,
         role: 'admin'
@@ -107,7 +107,7 @@ RSpec.describe '/users', type: :request do
       operator = create(:user, role: :admin)
       expect do
         patch user_path(target_user.id), params:
-          { user: { user_id: target_user.id, role: 'admin' }, current_user_id: operator.id }
+          { user: { id: target_user.id, role: 'admin' }, current_user_id: operator.id }
       end.to change(target_user, :general).to('admin')
     end
 
@@ -115,7 +115,7 @@ RSpec.describe '/users', type: :request do
       target_user = create(:user, role: :general)
       operator = create(:user, role: :general)
       patch user_path(target_user.id), params:
-        { user: { user_id: target_user.id, role: 'admin' }, current_user_id: operator.id }
+        { user: { id: target_user.id, role: 'admin' }, current_user_id: operator.id }
       expect(response).to have_http_status(:forbidden)
     end
   end

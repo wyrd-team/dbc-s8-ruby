@@ -8,7 +8,7 @@ module Users
     attribute :operated_by, :integer
 
     def call
-      allowed = Users::UserAclDomain.can_create_user?(operator, role)
+      allowed = Users::UserAclDomain.can_create_user?(operator)
       raise ::Services::AuthError, '権限なし' unless allowed
 
       ::Users::UserRepository.new.create(role: role)
