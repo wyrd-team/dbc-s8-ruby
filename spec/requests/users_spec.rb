@@ -22,16 +22,14 @@ RSpec.describe '/users', type: :request do
     { role: :admin }
   end
 
-  let(:invalid_attributes) do
-    skip('Add a hash of attributes invalid for your model')
+  let(:valid_header) do
+    { operator_id: operator&.id }
   end
 
-  # This should return the minimal set of values that should be in the headers
-  # in order to pass any filters (e.g. authentication) defined in
-  # UsersController, or in your router and rack
-  # middleware. Be sure to keep this updated too.
-  let(:valid_headers) do
-    {}
+  let(:operator) { nil }
+
+  before do
+    operator
   end
 
   describe 'GET /index' do
@@ -53,79 +51,109 @@ RSpec.describe '/users', type: :request do
   end
 
   describe 'POST /create' do
-    it 'has status 200' do
-      operator = create(:user, role: :admin)
-      post users_path, params: { user: { role: 'general' }, current_user_id: operator.id }
-      expect(response).to have_http_status(:ok)
+    context 'when operator has admin role' do
+      let(:operator) { create(:user, role: :admin) }
+
+      it 'has status 200' do
+        post users_path, params: { user: { role: 'general' } }, headers: valid_header
+        expect(response).to have_http_status(:ok)
+      end
+
+      it 'contains created user' do
+        post users_path, params: { user: { role: 'general' } }, headers: valid_header
+        expect(response.parsed_body.deep_symbolize_keys[:user]).to include(
+          id: kind_of(Integer),
+          role: 'general'
+        )
+      end
+
+      it 'creates user' do
+        expect do
+          post users_path, params: { user: { role: 'general' } }, headers: valid_header
+        end.to change(User, :count).by(1)
+      end
     end
 
-    it 'contains created user' do
-      operator = create(:user, role: :admin)
-      post users_path, params: { user: { role: 'general' }, current_user_id: operator.id }
-      expect(response.parsed_body.deep_symbolize_keys[:user]).to include(
-        id: kind_of(Integer),
-        role: 'general'
-      )
-    end
+    context 'when operator has general role' do
+      let(:operator) { create(:user, role: :general) }
 
-    it 'creates user' do
-      operator = create(:user, role: :admin)
-      expect do
-        post users_path, params: { user: { role: 'general' }, current_user_id: operator.id }
-      end.to change(User, :count).by(1)
-    end
-
-    it 'requires admin role to operate' do
-      operator = create(:user, role: :general)
-      post users_path, params: { user: { role: 'general' }, current_user_id: operator.id }
-      expect(response).to have_http_status(:forbidden)
+      it 'requires admin role to operate' do
+        post users_path, params: { user: { role: 'general' } }, headers: valid_header
+        expect(response).to have_http_status(:forbidden)
+      end
     end
   end
 
   describe 'PATCH /update' do
-    it 'has status 200' do
-      target_user = create(:user, role: :general)
-      operator = create(:user, role: :admin)
-      patch user_path(target_user.id), params:
-        { user: { id: target_user.id, role: 'admin' }, current_user_id: operator.id }
-      expect(response).to have_http_status(:ok)
-    end
+    context 'when operator has admin role' do
+      let(:operator) { create(:user, role: :admin) }
 
-    it 'contains updated user' do
-      target_user = create(:user, role: :general)
-      operator = create(:user, role: :admin)
-      patch user_path(target_user.id), params:
-        { user: { id: target_user.id, role: 'admin' }, current_user_id: operator.id }
-      expect(response.parsed_body.deep_symbolize_keys[:user]).to include(
-        id: target_user.id,
-        role: 'admin'
-      )
-    end
-
-    it 'updates user' do
-      target_user = create(:user, role: :general)
-      operator = create(:user, role: :admin)
-      expect do
+      it 'has status 200' do
+        target_user = create(:user, role: :general)
         patch user_path(target_user.id), params:
-          { user: { id: target_user.id, role: 'admin' }, current_user_id: operator.id }
-      end.to change(target_user, :general).to('admin')
+          { user: { id: target_user.id, role: 'admin' } }, headers: valid_header
+        expect(response).to have_http_status(:ok)
+      end
+
+      it 'contains updated user' do
+        target_user = create(:user, role: :general)
+        patch user_path(target_user.id), params:
+          { user: { id: target_user.id, role: 'admin' } }, headers: valid_header
+        expect(response.parsed_body.deep_symbolize_keys[:user]).to include(
+          id: target_user.id,
+          role: 'admin'
+        )
+      end
+
+      it 'updates user' do
+        target_user = create(:user, role: :general)
+        expect do
+          patch user_path(target_user.id), params:
+            { user: { id: target_user.id, role: 'admin' } }, headers: valid_header
+        end.to change { target_user.reload.role }.from('general').to('admin')
+      end
     end
 
-    it 'requires admin role to operate' do
-      target_user = create(:user, role: :general)
-      operator = create(:user, role: :general)
-      patch user_path(target_user.id), params:
-        { user: { id: target_user.id, role: 'admin' }, current_user_id: operator.id }
-      expect(response).to have_http_status(:forbidden)
+    context 'when operator has general role' do
+      let(:operator) { create(:user, role: :general) }
+
+      it 'requires admin role to operate' do
+        target_user = create(:user, role: :general)
+        patch user_path(target_user.id), params:
+          { user: { id: target_user.id, role: 'admin' } }, headers: valid_header
+        expect(response).to have_http_status(:forbidden)
+      end
     end
   end
 
   describe 'DELETE /destroy' do
-    it 'destroys the requested user' do
-      user = User.create! valid_attributes
-      expect do
-        delete user_url(user), headers: valid_headers, as: :json
-      end.to change(User, :count).by(-1)
+    context 'when operator has admin role' do
+      let(:operator) { create(:user, role: :admin) }
+
+      it 'destroys the requested user' do
+        target_user = create(:user, role: :general)
+        expect do
+          delete user_url(target_user.id), headers: valid_header
+        end.to change(User, :count).by(-1)
+      end
+
+      it 'have status success' do
+        user = User.create!(role: :general)
+        delete user_url(user.id), headers: valid_header
+        expect(response).to have_http_status(:ok)
+      end
+
+      it 'response contains nothing' do
+        user = User.create(role: :general)
+        delete user_url(user.id), headers: valid_header
+        expect(response.parsed_body).to eq({})
+      end
+
+      it 'cannot delete admin' do
+        user = User.create(role: :admin)
+        delete user_url(user.id), headers: valid_header
+        expect(response).to have_http_status(:forbidden)
+      end
     end
   end
 end

@@ -13,6 +13,11 @@ module Users
       ar2vo(user)
     end
 
+    def delete(user_id:)
+      user = ::User.find(user_id)
+      user.destroy!
+    end
+
     def find_by_id(user_id:)
       user = ::User.find(user_id)
       return unless user

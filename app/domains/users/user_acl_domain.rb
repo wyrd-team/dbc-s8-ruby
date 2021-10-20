@@ -16,7 +16,7 @@ module Users
     end
 
     def self.can_delete_user?(operator, target_user)
-      operator.admin? && target_user.general?
+      operator.role == 'admin' && target_user.role == 'general'
     end
   end
 end

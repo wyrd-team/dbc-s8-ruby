@@ -19,23 +19,28 @@ class UsersController < ApplicationController
 
   # POST /users
   def create
-    user = ::Users::CreateUserService.call(**user_params, operated_by: auth_params[:current_user_id])
+    user = ::Users::CreateUserService.call(**user_params, operated_by: operator_id)
     render json: { user: user }, status: :ok
   end
 
   # PATCH/PUT /users/1
   def update
-    user = ::Users::UpdateUserService.call(**user_params, operated_by: auth_params[:current_user_id])
-    render json: user
+    user = ::Users::UpdateUserService.call(**user_params, operated_by: operator_id)
+    render json: { user: user }, status: :ok
     # render json: @user.errors, status: :unprocessable_entity
   end
 
   # DELETE /users/1
   def destroy
-    raise NotImplementedError
+    ::Users::DeleteUserService.call(id: user_id, operated_by: operator_id)
+    render json: {}, status: :ok
   end
 
   private
+
+  def user_id
+    params.permit(:id)[:id]
+  end
 
   # Only allow a list of trusted parameters through.
   def user_params
@@ -43,8 +48,7 @@ class UsersController < ApplicationController
     params.require(:user).permit(:id, :role)
   end
 
-  def auth_params
-    # 認証する方法がないためパラメータでカレントユーザのIDを受け取る様にする
-    params.permit(:current_user_id)
+  def operator_id
+    request.headers[:operator_id]
   end
 end
