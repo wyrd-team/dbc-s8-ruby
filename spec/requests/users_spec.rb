@@ -33,20 +33,35 @@ RSpec.describe '/users', type: :request do
   end
 
   describe 'GET /index' do
-    it 'contains multiple users' do
-      user1 = create(:user)
-      user2 = create(:user)
+    context 'when operator has admin role' do
+      let(:operator) { create(:user, role: :admin) }
 
-      get users_url
-      expect(response.parsed_body).to contain_exactly(user1.as_json, user2.as_json)
+      it 'contains multiple users' do
+        user1 = create(:user)
+        user2 = create(:user)
+
+        expected_value = [
+          operator.to_vo.as_json,
+          user1.to_vo.as_json,
+          user2.to_vo.as_json
+        ]
+
+        get(users_url, headers: valid_header)
+        expect(response.parsed_body).to match_array(expected_value)
+      end
     end
   end
 
   describe 'GET /show' do
-    it 'renders a successful response' do
-      user = User.create! valid_attributes
-      get user_url(user), as: :json
-      expect(response).to be_successful
+    context 'when operator has admin role' do
+      let(:operator) { create(:user, role: :admin) }
+
+      it 'renders a successful response' do
+        target_user = create(:user, role: :general)
+        patch user_path(target_user.id), params:
+          { user: { id: target_user.id, role: 'admin' } }, headers: valid_header
+        expect(response).to have_http_status(:ok)
+      end
     end
   end
 

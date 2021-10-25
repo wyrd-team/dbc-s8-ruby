@@ -2,6 +2,19 @@
 
 module Users
   class UserAclDomain < ::Domain
+    def self.can_find_users?(operator)
+      operator.role == 'admin'
+    end
+
+    def self.can_show_user?(operator, target_user)
+      case operator.role
+      when 'admin'
+        true
+      when 'general'
+        operator == target_user
+      end
+    end
+
     def self.can_create_user?(operator)
       operator.admin?
     end

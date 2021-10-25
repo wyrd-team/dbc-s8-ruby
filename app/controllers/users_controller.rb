@@ -7,13 +7,13 @@ class UsersController < ApplicationController
 
   # GET /users
   def index
-    @users = User.all
-
+    @users = ::Users::IndexUserService.call(operated_by: operator_id)
     render json: @users
   end
 
   # GET /users/1
   def show
+    @user = ::Users::ShowUserService.call(**user_params, operated_by: operator_id)
     render json: @user
   end
 
@@ -27,7 +27,6 @@ class UsersController < ApplicationController
   def update
     user = ::Users::UpdateUserService.call(**user_params, operated_by: operator_id)
     render json: { user: user }, status: :ok
-    # render json: @user.errors, status: :unprocessable_entity
   end
 
   # DELETE /users/1
