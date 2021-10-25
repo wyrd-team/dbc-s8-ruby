@@ -25,9 +25,4 @@ RSpec.describe ::Users::UserRepository, type: :repository do
       )
     end
   end
-
-  describe '.update' do
-    let!(:user) { create(:user) }
-    # todo
-  end
 end
