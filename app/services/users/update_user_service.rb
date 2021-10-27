@@ -1,17 +1,22 @@
 # frozen_string_literal: true
 
 module Users
-  class CreateUserService < ApplicationService
+  class UpdateUserService < ApplicationService
+    # 更新したいUserのid
+    attribute :id, :integer
     # 作成するロール文字列
     attribute :role, :string
     # 操作するユーザID
     attribute :operated_by, :integer
 
     def call
-      allowed = Users::UserAclDomain.can_create_user?(operator)
+      user = ::Users::UserRepository.new.find_by_id(user_id: id)
+
+      allowed = Users::UserAclDomain.can_update_user?(operator, user)
       raise ::Services::AuthError, '権限なし' unless allowed
 
-      ::Users::UserRepository.new.create(role: role)
+      # 更新周りはこんな感じ
+      ::Users::UserRepository.new.update(user_id: user.id, role: role)
     end
 
     private
