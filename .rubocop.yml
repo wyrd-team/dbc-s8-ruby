@@ -29,4 +29,7 @@ Metrics/BlockLength:
     - spec/**/*
 
 RSpec/ExampleLength:
-  CountAsOne: ['array', 'hash', 'heredoc']
+  CountAsOne: ["array", "hash", "heredoc"]
+
+RSpec/MultipleExpectations:
+  Enabled: false
