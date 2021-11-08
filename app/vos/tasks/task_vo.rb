@@ -2,6 +2,12 @@
 
 module Tasks
   class TaskVo < ::ApplicationVo
-    attr_accessor :id, :expired_on, :priority, :status, :user_id, :name, :description
+    attribute :id, :integer
+    attribute :expired_on, :datetime
+    attribute :priority, :string
+    attribute :status, :string
+    attribute :user_id, :integer
+    attribute :name, :string
+    attribute :description, :string
   end
 end

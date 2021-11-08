@@ -24,6 +24,9 @@ Style/Documentation:
 Style/AsciiComments:
   Enabled: false
 
+Metrics/MethodLength:
+  CountAsOne: ["array", "hash", "heredoc"]
+
 Metrics/BlockLength:
   Exclude:
     - spec/**/*

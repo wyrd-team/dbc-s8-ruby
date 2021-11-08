@@ -2,9 +2,8 @@
 
 module Tasks
   class TaskRepository < ::ApplicationRepository
-    def create(params)
-      # TODO: 引数を要検討
-      task = ::Task.create!(params)
+    def create(task_vo)
+      task = ::Task.create!(task_vo.attributes)
       task.to_vo
     end
   end

@@ -4,11 +4,10 @@ module Tasks
   class CreateTaskService < ApplicationService
     # 作成するロール文字列
     attribute :role, :string
-    # TODO: 型をどうするか検討する
-    attribute :expired_on, :string
+    attribute :expired_on, :datetime
     attribute :priority, :string
     attribute :status, :string
-    attribute :user_id, :string
+    attribute :user_id, :integer
     attribute :name, :string
     attribute :description, :string
 
@@ -19,8 +18,15 @@ module Tasks
       allowed = Tasks::TaskAclDomain.can_create_user?(operator)
       raise ::Services::AuthError, '権限なし' unless allowed
 
-      # TODO: 引数を正しく指定する
-      ::Tasks::TaskRepository.new.create(role: role)
+      task_vo = ::Tasks::TaskVo.new(
+        expired_on: expired_on,
+        priority: priority,
+        status: status,
+        user_id: user_id,
+        name: name,
+        description: description
+      )
+      ::Tasks::TaskRepository.new.create(task_vo)
     end
 
     private

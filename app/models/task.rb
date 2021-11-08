@@ -8,7 +8,6 @@ class Task < ApplicationRecord
 
   def to_vo
     task_vo = ::Tasks::TaskVo.new
-    
     task_vo.id = id
     task_vo.expired_on = expired_on
     task_vo.priority = priority
@@ -16,7 +15,6 @@ class Task < ApplicationRecord
     task_vo.user_id = user_id
     task_vo.name = name
     task_vo.description = description
-
     task_vo
   end
 end
