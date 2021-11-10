@@ -7,14 +7,14 @@ RSpec.describe ::Tasks::TaskRepository, type: :repository do
 
   describe '.create' do
     let(:params) do
-      {
+      ::Tasks::TaskVo.new(
         expired_on: '2021-11-01',
         priority: 'low',
         status: 'not_started_yet',
         user_id: user.id,
         name: 'タスク名',
         description: 'タスク説明'
-      }
+      )
     end
 
     it 'persists user' do

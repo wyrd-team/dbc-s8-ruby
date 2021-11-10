@@ -19,8 +19,8 @@ RSpec.describe ::Tasks::TaskVo, type: :vo do
     expect(task_vo).to have_attributes(
       id: kind_of(Integer),
       expired_on: kind_of(Date),
-      priority: :low,
-      status: :not_started_yet,
+      priority: 'low',
+      status: 'not_started_yet',
       user_id: kind_of(Integer),
       name: 'sample user',
       description: 'sample task'

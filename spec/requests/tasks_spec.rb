@@ -34,20 +34,22 @@ RSpec.describe '/tasks', type: :request do
     {}
   end
 
+  let(:user) { create(:user) }
+
   describe 'GET /index' do
     it 'renders a successful response' do
-      pending("TODO")
+      # pending("TODO")
       Task.create! valid_attributes
-      get tasks_url, headers: valid_headers, as: :json
+      get user_tasks_url(user), headers: valid_headers, as: :json
       expect(response).to be_successful
     end
   end
 
   describe 'GET /show' do
     it 'renders a successful response' do
-      pending("TODO")
+      # pending("TODO")
       task = Task.create! valid_attributes
-      get task_url(task), as: :json
+      get user_task_url(user, task), as: :json
       expect(response).to be_successful
     end
   end
@@ -56,13 +58,13 @@ RSpec.describe '/tasks', type: :request do
     context 'with valid parameters' do
       it 'creates a new Task' do
         expect do
-          post tasks_url,
+          post user_tasks_url(user),
                params: { task: valid_attributes }, headers: valid_headers, as: :json
         end.to change(Task, :count).by(1)
       end
 
       it 'renders a JSON response with the new task' do
-        post tasks_url,
+        post user_tasks_url(user),
              params: { task: valid_attributes }, headers: valid_headers, as: :json
         expect(response).to have_http_status(:created)
         expect(response.content_type).to match(a_string_including('application/json'))
@@ -70,17 +72,17 @@ RSpec.describe '/tasks', type: :request do
     end
 
     context 'with invalid parameters' do
-      pending("TODO")
+      # pending("TODO")
 
       it 'does not create a new Task' do
         expect do
-          post tasks_url,
+          post user_tasks_url(user),
                params: { task: invalid_attributes }, as: :json
         end.to change(Task, :count).by(0)
       end
 
       it 'renders a JSON response with errors for the new task' do
-        post tasks_url,
+        post user_tasks_url(user),
              params: { task: invalid_attributes }, headers: valid_headers, as: :json
         expect(response).to have_http_status(:unprocessable_entity)
         expect(response.content_type).to eq('application/json')
@@ -89,7 +91,7 @@ RSpec.describe '/tasks', type: :request do
   end
 
   describe 'PATCH /update' do
-    pending("TODO")
+    # pending("TODO")
     context 'with valid parameters' do
       let(:new_attributes) do
         skip('Add a hash of attributes valid for your model')
@@ -97,7 +99,7 @@ RSpec.describe '/tasks', type: :request do
 
       it 'updates the requested task' do
         task = Task.create! valid_attributes
-        patch task_url(task),
+        patch user_task_url(user, task),
               params: { task: new_attributes }, headers: valid_headers, as: :json
         task.reload
         skip('Add assertions for updated state')
@@ -105,7 +107,7 @@ RSpec.describe '/tasks', type: :request do
 
       it 'renders a JSON response with the task' do
         task = Task.create! valid_attributes
-        patch task_url(task),
+        patch user_task_url(user, task),
               params: { task: new_attributes }, headers: valid_headers, as: :json
         expect(response).to have_http_status(:ok)
         expect(response.content_type).to match(a_string_including('application/json'))
@@ -115,7 +117,7 @@ RSpec.describe '/tasks', type: :request do
     context 'with invalid parameters' do
       it 'renders a JSON response with errors for the task' do
         task = Task.create! valid_attributes
-        patch task_url(task),
+        patch user_task_url(user, task),
               params: { task: invalid_attributes }, headers: valid_headers, as: :json
         expect(response).to have_http_status(:unprocessable_entity)
         expect(response.content_type).to eq('application/json')
@@ -124,11 +126,11 @@ RSpec.describe '/tasks', type: :request do
   end
 
   describe 'DELETE /destroy' do
-    pending("TODO")
+    # pending("TODO")
     it 'destroys the requested task' do
       task = Task.create! valid_attributes
       expect do
-        delete task_url(task), headers: valid_headers, as: :json
+        delete user_task_url(user, task), headers: valid_headers, as: :json
       end.to change(Task, :count).by(-1)
     end
   end
