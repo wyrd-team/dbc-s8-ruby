@@ -16,13 +16,13 @@ class UsersController < ApplicationController
   # POST /users
   def create
     user = ::Users::CreateUserService.call(**user_params, operated_by: operator_id)
-    render json: { user: user }, status: :ok
+    render json: { user: user.attributes }, status: :ok
   end
 
   # PATCH/PUT /users/1
   def update
     user = ::Users::UpdateUserService.call(**user_params, operated_by: operator_id)
-    render json: { user: user }, status: :ok
+    render json: { user: user.attributes }, status: :ok
   end
 
   # DELETE /users/1
