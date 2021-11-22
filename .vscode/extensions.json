@@ -2,6 +2,7 @@
   "recommendations": [
     "misogi.ruby-rubocop",
     "castwide.solargraph",
-    "eamodio.gitlens"
+    "eamodio.gitlens",
+    "editorconfig.editorconfig"
   ]
 }
