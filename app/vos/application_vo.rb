@@ -1,4 +1,6 @@
 # frozen_string_literal: true
 
-class ApplicationVo # rubocop:disable Lint/EmptyClass
+class ApplicationVo
+  include ActiveModel::Model
+  include ActiveModel::Attributes
 end

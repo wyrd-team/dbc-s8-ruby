@@ -2,7 +2,8 @@
 
 module Users
   class UserVo < ApplicationVo
-    attr_accessor :id, :role
+    attribute :id, :integer
+    attribute :role, :string
 
     def admin?
       role == 'admin'
