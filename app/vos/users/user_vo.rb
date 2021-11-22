@@ -8,5 +8,9 @@ module Users
     def admin?
       role == 'admin'
     end
+
+    def general?
+      role == 'general'
+    end
   end
 end

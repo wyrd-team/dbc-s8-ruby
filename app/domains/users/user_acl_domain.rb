@@ -3,16 +3,13 @@
 module Users
   class UserAclDomain < ::Domain
     def self.can_find_users?(operator)
-      operator.role == 'admin'
+      operator.admin?
     end
 
     def self.can_show_user?(operator, target_user)
-      case operator.role
-      when 'admin'
-        true
-      when 'general'
-        operator == target_user
-      end
+      return true if operator.admin?
+
+      operator.general? && operator == target_user
     end
 
     def self.can_create_user?(operator)
@@ -20,16 +17,13 @@ module Users
     end
 
     def self.can_update_user?(operator, target_user)
-      case operator.role
-      when 'admin'
-        true
-      when 'general'
-        operator == target_user
-      end
+      return true if operator.admin?
+
+      operator.general? && operator == target_user
     end
 
     def self.can_delete_user?(operator, target_user)
-      operator.role == 'admin' && target_user.role == 'general'
+      operator.admin? && target_user.general?
     end
   end
 end
