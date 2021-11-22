@@ -6,6 +6,8 @@ class Task < ApplicationRecord
   enum priority: { low: 10, middle: 20, high: 30 }
   enum status: { not_started_yet: 10, in_progress: 20, completed: 90 }
 
+  validates :name, presence: true
+
   def to_vo
     task_vo = ::Tasks::TaskVo.new
     task_vo.id = id

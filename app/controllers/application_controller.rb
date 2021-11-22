@@ -5,6 +5,10 @@ class ApplicationController < ActionController::API
     render json: exception, status: 403
   end
 
+  rescue_from ::ActiveRecord::RecordInvalid do |exception|
+    render json: exception, status: :unprocessable_entity
+  end
+
   private
 
   def operator_id

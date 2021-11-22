@@ -22,17 +22,17 @@ RSpec.describe '/tasks', type: :request do
   let(:valid_attributes) do
     {
       expired_on: Date.current,
-      priority: :middle, 
-      status: :not_started_yet, 
+      priority: :middle,
+      status: :not_started_yet,
       user_id: current_user.id,
       name: 'タスク名',
-      description: 'タスク説明',
+      description: 'タスク説明'
     }
   end
 
   let(:invalid_attributes) do
     {
-      user: current_user,
+      user_id: current_user.id
     }
   end
 
@@ -56,7 +56,7 @@ RSpec.describe '/tasks', type: :request do
   end
 
   describe 'GET /show' do
-    pending("TODO")
+    pending('TODO')
     it 'renders a successful response' do
       task = Task.create! valid_attributes
       get user_task_url(current_user, task), as: :json
@@ -69,13 +69,15 @@ RSpec.describe '/tasks', type: :request do
       it 'creates a new Task' do
         expect do
           post user_tasks_url(current_user),
-               params: { task: valid_attributes }, headers: valid_headers, as: :json
+               params: { task: valid_attributes },
+               headers: valid_headers, as: :json
         end.to change(Task, :count).by(1)
       end
 
       it 'renders a JSON response with the new task' do
         post user_tasks_url(current_user),
-             params: { task: valid_attributes }, headers: valid_headers, as: :json
+             params: { task: valid_attributes },
+             headers: valid_headers, as: :json
         expect(response).to have_http_status(:created)
         expect(response.content_type).to match(a_string_including('application/json'))
       end
@@ -85,15 +87,17 @@ RSpec.describe '/tasks', type: :request do
       it 'does not create a new Task' do
         expect do
           post user_tasks_url(current_user),
-               params: { task: invalid_attributes }, as: :json
+               params: { task: invalid_attributes },
+               headers: valid_headers, as: :json
         end.to change(Task, :count).by(0)
       end
 
       it 'renders a JSON response with errors for the new task' do
         post user_tasks_url(current_user),
-             params: { task: invalid_attributes }, headers: valid_headers, as: :json
+             params: { task: invalid_attributes },
+             headers: valid_headers, as: :json
         expect(response).to have_http_status(:unprocessable_entity)
-        expect(response.content_type).to eq('application/json')
+        expect(response.content_type).to eq('application/json; charset=utf-8')
       end
     end
   end
@@ -133,7 +137,7 @@ RSpec.describe '/tasks', type: :request do
   end
 
   describe 'DELETE /destroy' do
-    pending("TODO")
+    pending('TODO')
     it 'destroys the requested task' do
       task = Task.create! valid_attributes
       expect do
