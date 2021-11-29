@@ -50,7 +50,8 @@ RSpec.describe '/tasks', type: :request do
     it 'renders a successful response' do
       # pending("TODO")
       Task.create! valid_attributes
-      get user_tasks_url(current_user), headers: valid_headers, as: :json
+      get user_tasks_url(current_user, params: { task: { status: nil, description: nil } }), headers: valid_headers,
+                                                                                             as: :json
       expect(response).to be_successful
     end
   end
