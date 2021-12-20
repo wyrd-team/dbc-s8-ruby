@@ -9,13 +9,14 @@ module Tasks
     validate :query, lambda { |service|
       return if service.query.is_a?(::Tasks::SearchTaskQuery)
 
-      errors.add(:base, 'Must be friends to leave a comment')
+      errors.add(:base, 'Query class not match.')
     }
 
     def call
       allowed = Tasks::TaskAclDomain.can_search_user?
       raise ::Services::AuthError, '権限なし' unless allowed
 
+      validate!
       ::Tasks::TaskRepository.new.search(
         status: query.status,
         description: query.description,
