@@ -6,5 +6,9 @@ module Tasks
       # 作成時は権限関係なく作成できる
       true
     end
+
+    def self.can_search_user?
+      true
+    end
   end
 end

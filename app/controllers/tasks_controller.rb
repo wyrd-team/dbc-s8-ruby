@@ -5,7 +5,15 @@ class TasksController < ApplicationController
 
   # GET /tasks
   def index
-    @tasks = Task.all
+    req_query = params.require(:task).permit(
+      :status,
+      :description
+    )
+    query = ::Tasks::SearchTaskQuery.new(
+      status: req_query[:status],
+      description: req_query[:description]
+    )
+    @tasks = ::Tasks::SearchTaskService.call(query: query, operated_by: operator_id)
 
     render json: @tasks
   end
